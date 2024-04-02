@@ -1,27 +1,30 @@
-// Add missing import statement for the L object from the Leaflet library
-import L from 'leaflet';
+// Define API key
+const API_KEY = "pk.eyJ1IjoiaHVsc3kiLCJhIjoiY2x1OW8wdHo5MGIzdTJrbGRnOGx4bXV0MiJ9.7FIEfH545yOuX3asxM8zCg";
 
-const API_KEY = "pk.eyJ1IjoiaHVsc3kiLCJhIjoiY2x1OW83cXJzMGM2OTJpcDliZDY3ZnZkaCJ9.zGn-H7l22ZPtbccxAB4EEw";
-
+// Define query URL
 const queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
+// Fetch the GeoJSON data
 d3.json(queryUrl).then(data => {
     createFeatures(data.features);
 });
 
+// Function to determine marker size based on magnitude
 function markerSize(magnitude) {
     return magnitude * 5000;
 };
 
+// Function to determine marker color based on depth
 function chooseColor(depth) {
     return depth < 10 ? "#78f100" :
-                 depth < 30 ? "#dcf400" :
-                 depth < 50 ? "#f7db11" :
-                 depth < 70 ? "#fdb72a" :
-                 depth < 90 ? "#fca35d" :
-                                            "#ff5f65";
+           depth < 30 ? "#dcf400" :
+           depth < 50 ? "#f7db11" :
+           depth < 70 ? "#fdb72a" :
+           depth < 90 ? "#fca35d" :
+                        "#ff5f65";
 }
 
+// Function to create features
 function createFeatures(earthquakeData) {
     const earthquakes = L.geoJSON(earthquakeData, {
         onEachFeature: (feature, layer) => {
@@ -39,9 +42,11 @@ function createFeatures(earthquakeData) {
         }
     });
 
+    // Create the map
     createMap(earthquakes);
 }
 
+// Function to create map
 function createMap(earthquakes) {
     const grayscale = L.tileLayer('https://api.mapbox.com/styles/v1/{style}/tiles/{z}/{x}/{y}?access_token={access_token}', {
         attribution: "© Mapbox © OpenStreetMap Improve this map",
